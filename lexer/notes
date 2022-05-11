@@ -1,0 +1,10 @@
+scanning happens in stages. 
+first step is to convert regular expressions that identify tokens into NFA 
+second step is the conversion of NFA into DFA 
+and final step involves using DFA to construct a scanner. 
+
+
+1. What should be public interface for a scanner. 
+
+new 
+get_next_token 
