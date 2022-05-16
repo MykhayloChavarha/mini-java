@@ -1,5 +1,11 @@
 {
     "lldb.showDisassembly": "never",
     "lldb.dereferencePointers": false,
-    "lldb.displayFormat": "auto"
+    "lldb.displayFormat": "auto",
+    "rust-analyzer.inlayHints.parameterHints": false,
+    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+    "rust-analyzer.procMacro.enable": true,
+    "presentation": {
+        "showReuseMessage": false
+   }
 }

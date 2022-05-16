@@ -37,16 +37,16 @@ void
 ;
 ,
 
-&&
-<
-+ 
-- 
-*
-.
-!
 
+< -> Gr
++ -> Plus
+- -> Minus 
+* -> Star
+. -> Dot
+! -> Not
+&&
 
 Identifier: sequence of letters digits and underscores starting with a letter 
 [a-zA-Z][0-9_a-zA-Z]*
 Integer Literal: 
-0|-[1-9][0-9]*
+0|-?[1-9][0-9]*
