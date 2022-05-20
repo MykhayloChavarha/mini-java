@@ -35,7 +35,6 @@ pub enum DfaState {
     Colon, 
 
     Exit,  
-
     Error,
 }
 
@@ -83,7 +82,6 @@ impl DfaState {
             DfaState::Comma => self.exit(), 
             DfaState::Dot => self.exit(),
 
-            // System.out.prinltn
             DfaState::Error => todo!(),
             DfaState::Exit => self.exit(),    
         }
@@ -164,10 +162,6 @@ impl DfaState {
             }
         }
     }
-    // fn system_dot(self, next_char: char) -> DfaState {
-    //     match next_char {
-    //     }
-    // }
 
     fn number(self, next_char: char) -> DfaState {
         match next_char {
