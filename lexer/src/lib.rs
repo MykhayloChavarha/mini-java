@@ -1,4 +1,4 @@
-use std::{borrow::Borrow, fs::File, num::{ParseFloatError, ParseIntError}};
+use std::{borrow::Borrow, fs::File, io::Read, num::{ParseFloatError, ParseIntError}};
 use buffer::{Buffer, BufferError};
 use phf::phf_map;
 use thiserror::Error;
@@ -6,9 +6,7 @@ use anyhow::Error;
 
 mod buffer;
 
-
-
-
+// const BUFFER_SIZE: usize = 4096;
 #[derive(Clone)]
 pub enum Token {
     Identifier(String),
@@ -85,16 +83,18 @@ pub enum TokenizerError {
     FloatParseError(#[from] ParseFloatError),
     #[error(transparent)]
     FileError(#[from] BufferError),
+    #[error("End of file is reached")]
+    EndOfFile,
     #[error("Unknown.")]
-    Unknown(),
+    Unknown,
 }
 
-pub struct Tokenizer {
-    buffer: Buffer,  
+pub struct Tokenizer<R: Read> {
+    buffer: Buffer<R, 4096>,  
 }
 
-impl Tokenizer {
-    pub fn new(file: File) -> Result<Self, BufferError> {
+impl<R: Read> Tokenizer<R> {
+    pub fn new(file: R) -> Result<Self, BufferError> {
         let buffer = Buffer::new(file)?;
 
         Ok(Tokenizer{
@@ -177,14 +177,13 @@ impl Tokenizer {
                 '.' => {
                     self.buffer.get_next_char()?;
                     return Ok(Token::Dot)
-                } 
+                }, 
                 _ => {
                 }
             }
         }
 
-        Ok(Token::Dummy)
-
+        Err(TokenizerError::EndOfFile)
     } 
 
     fn tokenize_identifier(&mut self) -> Result<Token, TokenizerError> {
@@ -228,7 +227,7 @@ impl Tokenizer {
         if let Some(token) = BRACKET.get(&next_char) {
             return Ok((*token).clone());
         }
-            Err(TokenizerError::Unknown())
+        Err(TokenizerError::Unknown)
     }
 
     fn tokenize_num_operator(&mut self) -> Result<Token, TokenizerError> {
@@ -236,10 +235,11 @@ impl Tokenizer {
         if let Some(token) = NUMERICAL_OPERATOR.get(&next_char) {
             return Ok(token.clone());
         }
-        Err(TokenizerError::Unknown())
+        Err(TokenizerError::Unknown)
     }
 
-    // removes comments and whitespaces;
+    // removes whitespaces;
+    // TODO: Add comments too; 
     fn trim(&mut self) -> Result<(), TokenizerError> {
         let next_token = self.buffer.peek();
         loop {
@@ -293,3 +293,14 @@ static NUMERICAL_OPERATOR: phf::Map<char, Token> = phf_map! {
     '/' => Token::Divide, 
     '*' => Token::Multiply, 
 };
+
+
+#[cfg(test)]
+mod tests {
+
+    use anyhow::Result;
+    #[test]
+    fn should_return_true() -> Result<()> {
+        Ok(())
+    }
+}
